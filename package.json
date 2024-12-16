@@ -1,0 +1,11 @@
+{
+  "name": "call-notary",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "dependencies": {
+    "@hashgraph/sdk": "^2.x.x",
+    "twilio": "^4.x.x",
+    "express": "^4.x.x",
+    "dotenv": "^16.x.x"
+  }
+}
