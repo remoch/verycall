@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VeryCall - Call Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-group input {
+            padding: 8px;
+            width: 100%;
+            max-width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #e6ffe6;
+            border: 1px solid #b3ffb3;
+        }
+        .error {
+            background: #ffe6e6;
+            border: 1px solid #ffb3b3;
+        }
+        .verify-button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .verify-button:hover {
+            background: #45a049;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+        .badge.verified {
+            background: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VeryCall - Verify Your Call Record</h1>
+        <p>Enter your verification code to check your call record. For additional verification, you can also provide your phone number.</p>
+        
+        <div class="input-group">
+            <label for="codeInput">Verification Code (required)</label>
+            <input type="text" id="codeInput" placeholder="Enter your 6-digit code" required>
+        </div>
+
+        <div class="input-group">
+            <label for="phoneInput">Phone Number (optional)</label>
+            <input type="tel" id="phoneInput" placeholder="e.g., +33695030704">
+            <small>Include country code (e.g., +41 for Switzerland)</small>
+        </div>
+
+        <button onclick="verifyCode()" class="verify-button">Verify Call</button>
+
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        async function verifyCode() {
+            const code = document.getElementById('codeInput').value;
+            const phone = document.getElementById('phoneInput').value;
+            const resultDiv = document.getElementById('result');
+
+            if (!code) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = '<p>Please enter a verification code.</p>';
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        code: code,
+                        phoneNumber: phone 
+                    })
+                });
+                
+                const data = await response.json();
+
+                if (data.verified) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <h3>Call Verified ✓</h3>
+                        <p>Timestamp: ${new Date(data.callDetails.timestamp).toLocaleString()}</p>
+                        ${data.callDetails.phoneNumberMatch ? 
+                            '<p><span class="badge verified">Phone Number Verified</span></p>' : ''}
+                        <p>Consensus Timestamp: ${data.callDetails.consensusTimestamp}</p>
+                        <p>Sequence Number: ${data.callDetails.sequenceNumber}</p>
+                        <p><a href="${data.callDetails.proofUrl}" target="_blank">
+                            View on Hashscan ↗
+                        </a></p>
+                    `;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `<p>${data.error || 'No record found for this code.'}</p>`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = '<p>Verification failed. Please try again.</p>';
+            }
+
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html> 
