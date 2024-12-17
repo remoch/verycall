@@ -3,7 +3,6 @@ const { hashData } = require('../utils/hash');
 
 class HederaService {
     constructor() {
-        // Initialize Hedera client
         const accountId = process.env.HEDERA_ACCOUNT_ID;
         const privateKey = process.env.HEDERA_PRIVATE_KEY;
         
@@ -14,17 +13,17 @@ class HederaService {
 
     async logCall(callData) {
         try {
-            console.log('Original data:', callData); // Debug log
+            console.log('Logging call data:', callData);
 
-            // Hash sensitive information
             const hashedData = {
-                callerHash: hashData(callData.caller),
-                calledHash: hashData(callData.called),
+                type: 'CALL_START',
+                callerHash: hashData(callData.caller || ''),
                 timestamp: callData.timestamp,
-                callId: hashData(callData.callId)
+                callIdHash: hashData(callData.callId || ''),
+                verificationCodeHash: hashData(callData.verificationCode || '')
             };
 
-            console.log('Hashed data:', hashedData); // Debug log
+            console.log('Hashed data:', hashedData);
 
             const message = new TopicMessageSubmitTransaction()
                 .setTopicId(this.topicId)
@@ -39,6 +38,49 @@ class HederaService {
             };
         } catch (error) {
             console.error('Error logging to Hedera:', error);
+            throw error;
+        }
+    }
+
+    async getMessagesForCode(code, phoneNumber = null) {
+        try {
+            const mirrorNodeUrl = `https://testnet.mirrornode.hedera.com/api/v1/topics/${this.topicId}/messages`;
+            
+            console.log('Querying mirror node:', mirrorNodeUrl);
+            
+            const response = await fetch(mirrorNodeUrl);
+            if (!response.ok) {
+                throw new Error(`Mirror node error: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            const messages = [];
+
+            const hashedCode = hashData(code);
+
+            for (const msg of data.messages) {
+                try {
+                    const messageData = JSON.parse(
+                        Buffer.from(msg.message, 'base64').toString()
+                    );
+
+                    if (messageData.verificationCodeHash === hashedCode) {
+                        if (!phoneNumber || messageData.callerHash === hashData(phoneNumber)) {
+                            messages.push({
+                                timestamp: messageData.timestamp,
+                                consensusTimestamp: msg.consensus_timestamp,
+                                sequenceNumber: msg.sequence_number
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error parsing message:', error);
+                }
+            }
+
+            return messages;
+        } catch (error) {
+            console.error('Error querying mirror node:', error);
             throw error;
         }
     }
