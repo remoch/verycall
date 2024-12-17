@@ -1,77 +1,93 @@
 const twilio = require('twilio');
 const hederaService = require('./hederaService');
-
+const { hashData } = require('../utils/hash');
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
-// Whitelist of allowed numbers
-const ALLOWED_NUMBERS = {
-    '1': '1234567890', // Example: Amazon Customer Service
-    '2': '00000000000', // Example: Test Number 2
-    '3': '5555555555', // Example: Test Number 3
-};
-
 class TwilioService {
-    handleIncomingCall(req, res) {
+    constructor() {
+        this.twilioClient = twilio(
+            process.env.TWILIO_ACCOUNT_SID,
+            process.env.TWILIO_AUTH_TOKEN
+        );
+    }
+
+    async handleIncomingCall(req, res) {
+        const callSid = req.body.CallSid;
+        const callerNumber = req.body.From;
         const twiml = new VoiceResponse();
         
-        // Provide menu of options
-        twiml.say('Welcome to the call logger. Please select from the following options:');
-        twiml.say('Press 1 for Amazon Customer Service');
-        twiml.say('Press 2 for Test Number 2');
-        twiml.say('Press 3 for Test Number 3');
-        
-        twiml.gather({
-            numDigits: 1,
-            action: '/process-call'
+        // Generate reference code
+        const referenceCode = hashData(callSid).substring(0, 6);
+
+        // Send SMS with verification details
+        try {
+            await this.twilioClient.messages.create({
+                body: `Your secure verification code is: ${referenceCode}. 
+                      You can verify your call at: ${process.env.BASE_URL}/verify`,
+                to: callerNumber,
+                from: process.env.TWILIO_PHONE_NUMBER
+            });
+            console.log('SMS sent successfully to:', callerNumber);
+        } catch (error) {
+            console.error('Error sending SMS:', error);
+        }
+
+        // Log call with verification code
+        await hederaService.logCall({
+            type: 'CALL_START',
+            callId: callSid,
+            caller: callerNumber,
+            timestamp: new Date().toISOString(),
+            verificationCode: referenceCode
         });
+
+        // Welcome message
+        twiml.say({
+            voice: 'Polly.Amy'
+        }, 'Welcome to VeryCall, a secure call logging service.');
+
+        twiml.pause({ length: 2 });
+
+        // First mention of code
+        twiml.say({
+            voice: 'Polly.Amy'
+        }, 'Your secure verification code is:');
+
+        twiml.pause({ length: 1 });
+
+        // Say code slowly, digit by digit
+        twiml.say({
+            voice: 'Polly.Amy'
+        }, referenceCode.split('').join('... '));
+
+        twiml.pause({ length: 2 });
+
+        // Repeat code
+        twiml.say({
+            voice: 'Polly.Amy'
+        }, 'I will repeat that. Your code is:');
+
+        twiml.pause({ length: 1 });
+
+        twiml.say({
+            voice: 'Polly.Amy'
+        }, referenceCode.split('').join('... '));
+
+        twiml.pause({ length: 2 });
+
+        // Explanation
+        twiml.say({
+            voice: 'Polly.Amy'
+        }, 'This code has been sent to your phone via SMS. You can use it to verify your call record at any time.');
+
+        twiml.pause({ length: 1 });
+
+        twiml.say({
+            voice: 'Polly.Amy'
+        }, 'Thank you for participating in this demonstration of secure call logging. You may hang up now.');
 
         res.type('text/xml');
         res.send(twiml.toString());
-    }
-
-    async processCall(req, res) {
-        const callerNumber = req.body.From;
-        const selection = req.body.Digits;
-        const calledNumber = ALLOWED_NUMBERS[selection];
-
-        if (!calledNumber) {
-            const twiml = new VoiceResponse();
-            twiml.say('Invalid selection. Goodbye.');
-            res.type('text/xml');
-            return res.send(twiml.toString());
-        }
-
-        // Log to Hedera
-        const callData = {
-            caller: callerNumber,
-            called: calledNumber,
-            timestamp: new Date().toISOString(),
-            callId: req.body.CallSid
-        };
-
-        try {
-            const hederaResponse = await hederaService.logCall(callData);
-            
-            // Provide verbal verification code
-            const verificationCode = hederaResponse.hashedData.callId.substring(0, 6);
-            
-            const twiml = new VoiceResponse();
-            twiml.say(`Your verification code is ${verificationCode.split('').join(' ')}`);
-            twiml.say('Please write this down. You can verify your call at our website using this code.');
-            twiml.pause({ length: 2 });
-            
-            // Connect the call
-            twiml.dial(calledNumber);
-            
-            res.type('text/xml');
-            res.send(twiml.toString());
-        } catch (error) {
-            console.error('Error processing call:', error);
-            const twiml = new VoiceResponse();
-            twiml.say('An error occurred. Please try again later.');
-            res.type('text/xml');
-            res.send(twiml.toString());
-        }
     }
 }
 
