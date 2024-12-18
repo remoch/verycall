@@ -53,7 +53,7 @@ BASE_URL=your_application_url
 ```
 ## Installation
 ```
-git clone https://github.com/remoch/hedera.git
+git clone https://github.com/remoch/verycall.git
 cd hedera
 ```
 
@@ -61,6 +61,7 @@ Install dependencies
 `npm install`
 
 ## Local Development
+
 1. Start server `node src/index.js`
 
 2.start ngrok for Twilio webhook: `ngrok http 3000`
