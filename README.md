@@ -62,11 +62,11 @@ Install dependencies
 
 ## Local Development
 
-1.start server `node src/index.js`
+1. Start server `node src/index.js`
 
-2.start ngrok for Twilio webhook: `ngrok http 3000`
+2. Start ngrok for Twilio webhook: `ngrok http 3000`
 
-3.update Twilio webhook with ngrok url + `/voice`
+3. Update Twilio webhook with ngrok url + `/voice`
 
 ## Deployment
 
