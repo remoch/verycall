@@ -9,7 +9,7 @@
 >    - ⚠️ Due to A2P 10DLC regulatory requirements, US numbers will not receive an SMS
 > 
 > 2. **View on Hashscan**
->    - 🔍 Topic ID: `0.0.5273088`
+>    - 🔍 Topic ID: `0.0.5282308`
 >    - 🌐 [View Topic on Hashscan](https://hashscan.io/testnet/topic/0.0.5282308)
 > 
 > 3. **Verify Your Call**
