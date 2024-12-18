@@ -7,6 +7,8 @@
 >    - 📞 Call: `+12345622404` (normal US landline)
 >    - 📝 Note the verification code from voice/SMS 
 >    - ⚠️ Due to A2P 10DLC regulatory requirements, US numbers will not receive an SMS
+>    - 💡 Don't want to call? Try example code: `d5e242`
+
 > 
 > 2. **View on Hashscan**
 >    - 🔍 Topic ID: `0.0.5282308`
