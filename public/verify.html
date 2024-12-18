@@ -63,13 +63,56 @@
             background: #4CAF50;
             color: white;
         }
+        .instructions {
+            background: #f8f9fa;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 4px 4px 0;
+        }
+        .emoji {
+            margin-right: 8px;
+        }
+        .warning {
+            color: #856404;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>VeryCall - Verify Your Call Record</h1>
-        <p>Enter your verification code to check your call record. For additional verification, you can also provide your phone number.</p>
-        
+        <h1>VeryCall - Secure Call Verification</h1>
+
+        <div class="instructions">
+            <h3><span class="emoji">🧪</span>Quick Test Instructions</h3>
+            
+            <p><strong>1. Make a Call</strong></p>
+            <ul>
+                <li><span class="emoji">📞</span>Call: <code>+12345622404</code> (normal landline)</li>
+                <li><span class="emoji">📝</span>Note the verification code from voice/SMS</li>
+                <li><span class="emoji">💡</span>Don't want to call? Try example code: <code>d5e242</code></li>
+            </ul>
+            
+            <div class="warning">
+                <span class="emoji">⚠️</span>Due to A2P 10DLC regulatory requirements, US numbers will not receive an SMS
+            </div>
+
+            <p><strong>2. View on Hashscan</strong></p>
+            <ul>
+                <li><span class="emoji">🔍</span>Topic ID: <code>0.0.5282308</code></li>
+                <li><span class="emoji">🌐</span><a href="https://hashscan.io/testnet/topic/0.0.5282308" target="_blank">View Topic on Hashscan</a></li>
+            </ul>
+
+            <p><strong>3. Verify Your Call</strong></p>
+            <ul>
+                <li><span class="emoji">✅</span>Enter your code below (and optionally your phone number for confirmed verification)</li>
+            </ul>
+        </div>
+
         <div class="input-group">
             <label for="codeInput">Verification Code (required)</label>
             <input type="text" id="codeInput" placeholder="Enter your 6-digit code" required>
