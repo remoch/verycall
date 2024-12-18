@@ -1,5 +1,22 @@
 # VeryCall - Secure Call Verification with Hedera
 
+---
+> ### 🧪 Quick Test Instructions for the Hedera Hackathon 2.0 Judges
+> 
+> 1. **Make a Call**
+>    - 📞 Call: `+12345622404` (normal landline)
+>    - 📝 Note the verification code from voice/SMS 
+>    - ⚠️ Due to A2P 10DLC regulatory requirements, US numbers will not receive an SMS
+> 
+> 2. **View on Hashscan**
+>    - 🔍 Topic ID: `0.0.5273088`
+>    - 🌐 [View Topic on Hashscan](https://hashscan.io/testnet/topic/0.0.5273088)
+> 
+> 3. **Verify Your Call**
+>    - 🔗 Visit: [Verification Portal](https://plankton-app-q7ra7.ondigitalocean.app/verify)
+>    - ✅ Enter your code (and optionally your phone number for confirmed verification)
+---
+
 VeryCall is a secure call logging and verification system built on Hedera's distributed ledger technology. It provides transparent, verifiable proof of calls while maintaining privacy through hashing.
 
 ## Features
