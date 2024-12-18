@@ -4,7 +4,7 @@
 > ### 🧪 Quick Test Instructions for the Hedera Hackathon 2.0 Judges
 > 
 > 1. **Make a Call**
->    - 📞 Call: `+12345622404` (normal landline)
+>    - 📞 Call: `+12345622404` (normal US landline)
 >    - 📝 Note the verification code from voice/SMS 
 >    - ⚠️ Due to A2P 10DLC regulatory requirements, US numbers will not receive an SMS
 > 
