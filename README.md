@@ -1,12 +1,12 @@
 # VeryCall - Secure Call Verification with Hedera
 
 ---
-> ### 🧪 Quick Test Instructions for the Hedera Hackathon 2.0 Judges
+> ### Test Instructions for the Hedera Hackathon 2.0 Judges
 > 
 > 1. **Make a Call**
 >    - 📞 Call: `+12345622404` (normal US landline)
 >    - 📝 Note the verification code from voice/SMS 
->    - ⚠️ Due to A2P 10DLC regulatory requirements, US numbers will not receive an SMS
+>    - ⚠️ Due to A2P 10DLC regulatory requirements, US numbers will not receive an SMS. Other countries might night be included in the geographic permission list - please reach out if this is the case for you.
 >    - 💡 Don't want to call? Try example code: `d5e242`
 
 > 
@@ -23,15 +23,15 @@ VeryCall is a secure call logging and verification system built on Hedera's dist
 
 ## Features
 - 🔐 Secure call logging on Hedera
-- 📱 SMS & Voice verification codes
-- 🔍 Call verification portal
+- 📱 Verification code via SMS & Voice
+- 🔍 [Call verification portal](https://plankton-app-q7ra7.ondigitalocean.app/verify)
 - 🔒 Privacy-preserving through hashing
 - ✅ Optional phone number verification
 
 ## How It Works
 
 1. **Call Logging**
-   - User calls the Twilio number
+   - User calls the phone number
    - System generates a unique verification code
    - Code is delivered via voice and SMS
    - Call details are hashed and stored on Hedera
