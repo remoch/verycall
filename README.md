@@ -52,8 +52,10 @@ PORT=3000
 BASE_URL=your_application_url
 ```
 ## Installation
-```git clone https://github.com/remoch/hedera.git
-cd hedera```
+```
+git clone https://github.com/remoch/hedera.git
+cd hedera
+```
 
 Install dependencies
 `npm install`
@@ -155,3 +157,10 @@ graph LR
    - Verify environment variables
    - Check build logs
    - Confirm webhook URLs
+
+
+
+
+
+
+
